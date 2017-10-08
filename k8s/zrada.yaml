@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: grpc-zrada-content-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: grpc-zrada-content
+    spec:
+      containers:
+        - name: grpc-content-service
+          image: gcr.io/alien-fold-180922/grpc-content:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONTENT_RESOURCE
+              value: "zrada.txt"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-zrada-content-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: grpc-zrada-content
+  ports:
+   - port: 8080
+     targetPort: 8080
+     protocol: TCP
+---

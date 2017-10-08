@@ -1,0 +1,121 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:3.1.0'
+    }
+
+}
+
+group 'com.grpcvsrest'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    maven {
+        url "https://grpcvsrest.s3.amazonaws.com/snapshots"
+    }
+}
+
+dependencies {
+    compile 'org.grpcvsrest:content:0.1-SNAPSHOT'
+    compile 'io.grpc:grpc-all:1.6.1'
+    compile project(':grpc-api')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+def mainClassName = "com.grpcvsrest.grpc.content.ContentServer"
+
+task runServer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "$mainClassName"
+}
+
+task runClient(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.grpcvsrest.grpc.content.unary.ContentClient'
+}
+
+runClient {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
+
+task streamingClient(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.grpcvsrest.grpc.content.streaming.ContentStreamingClient'
+}
+
+streamingClient {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn build
+    inputDir = project.projectDir
+    tag = 'grpc-content:latest'
+}
+
+task tagDocker(type: Exec) {
+    dependsOn buildDocker
+    commandLine 'docker', 'tag', 'grpc-content:latest', 'gcr.io/alien-fold-180922/grpc-content:latest'
+}
+
+task pushDocker(type: Exec) {
+    dependsOn tagDocker
+    commandLine 'gcloud', 'docker', '--', 'push', 'gcr.io/alien-fold-180922/grpc-content:latest'
+}
+
+task deployZrada(type: Exec) {
+    commandLine 'kubectl', 'create', '-f', 'k8s/zrada.yaml'
+}
+
+task deployPeremoga(type: Exec) {
+    commandLine 'kubectl', 'create', '-f', 'k8s/peremoga.yaml'
+}
+
+task deployPokemon(type: Exec) {
+    commandLine 'kubectl', 'create', '-f', 'k8s/pokemon.yaml'
+}
+
+task deployBigdata(type: Exec) {
+    commandLine 'kubectl', 'create', '-f', 'k8s/bigdata.yaml'
+}
+
+task undeployZrada(type: Exec) {
+    commandLine 'kubectl', 'delete', '-f', 'k8s/zrada.yaml'
+}
+
+task undeployPeremoga(type: Exec) {
+    commandLine 'kubectl', 'delete', '-f', 'k8s/peremoga.yaml'
+}
+
+task undeployPokemon(type: Exec) {
+    commandLine 'kubectl', 'delete', '-f', 'k8s/pokemon.yaml'
+}
+
+task undeployBigdata(type: Exec) {
+    commandLine 'kubectl', 'delete', '-f', 'k8s/bigdata.yaml'
+}
