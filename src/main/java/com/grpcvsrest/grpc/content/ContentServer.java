@@ -1,5 +1,6 @@
 package com.grpcvsrest.grpc.content;
 
+import com.grpcvsrest.grpc.content.streaming.ContentStreamer;
 import com.grpcvsrest.grpc.content.streaming.ContentStreamingService;
 import com.grpcvsrest.grpc.content.unary.ContentService;
 import com.grpcvsrest.grpc.content.unary.storage.InMemoryContentStorage;
@@ -9,14 +10,18 @@ import io.grpc.netty.NettyServerBuilder;
 import org.grpcvsrest.content.ContentProducer;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class ContentServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
+        ContentStreamer streamer = new ContentStreamer(createContentProducer(),
+                TimeUnit.SECONDS.toMillis(1 + new Random().nextInt(4)));
         Server grpcServer = NettyServerBuilder.forPort(8080)
                 .addService(new ContentService(new InMemoryContentStorage(createContentProducer())))
-                .addService(new ContentStreamingService(ContentServer::createContentProducer)).build()
+                .addService(new ContentStreamingService(streamer)).build()
                 .start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(grpcServer::shutdown));
