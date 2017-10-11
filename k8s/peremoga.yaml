@@ -24,7 +24,7 @@ kind: Service
 metadata:
   name: grpc-peremoga-content-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: grpc-peremoga-content
   ports:
