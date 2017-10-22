@@ -45,7 +45,7 @@ public class ContentStreamer {
     }
 
     private void generateContent() {
-        String value = contentProducer.next();
+        String value = "#"+contentProducer.next();
         if (value != null) {
             ContentStreamingResponse response = ContentStreamingResponse.newBuilder()
                     .setId(idGenerator.getAndIncrement())
