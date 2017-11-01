@@ -45,11 +45,11 @@ public class ContentStreamer {
     }
 
     private void generateContent() {
-        String value = "#"+contentProducer.next();
+        String value = contentProducer.next();
         if (value != null) {
             ContentStreamingResponse response = ContentStreamingResponse.newBuilder()
                     .setId(idGenerator.getAndIncrement())
-                    .setContent(value)
+                    .setContent(value + ".")
                     .build();
             responses.add(response);
             stream(response);

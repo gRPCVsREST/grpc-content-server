@@ -18,7 +18,7 @@ public class ContentServer {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         ContentStreamer streamer = new ContentStreamer(createContentProducer(),
-                TimeUnit.SECONDS.toMillis(1 + new Random().nextInt(4)));
+                TimeUnit.MILLISECONDS.toMillis(1 + new Random().nextInt(49)));
         Server grpcServer = NettyServerBuilder.forPort(8080)
                 .addService(new ContentService(new InMemoryContentStorage(createContentProducer())))
                 .addService(new ContentStreamingService(streamer)).build()
