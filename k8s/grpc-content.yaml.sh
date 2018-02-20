@@ -21,6 +21,8 @@ spec:
           env:
             - name: CONTENT_RESOURCE
               value: "$CONTENT_URL_A"
+            - name: counter
+              value: "$(date +%s)"
 ---
 apiVersion: v1
 kind: Service
@@ -55,6 +57,8 @@ spec:
           env:
             - name: CONTENT_RESOURCE
               value: "$CONTENT_URL_B"
+            - name: counter
+              value: "$(date +%s)"
 ---
 apiVersion: v1
 kind: Service
