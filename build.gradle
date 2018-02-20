@@ -72,58 +72,6 @@ jar {
     }
 }
 
-task buildDocker(type: DockerBuildImage) {
-    dependsOn build
-    inputDir = project.projectDir
-    tag = 'grpc-content:latest'
-}
 
-task tagDocker(type: Exec) {
-    dependsOn buildDocker
-    commandLine 'docker', 'tag', 'grpc-content:latest', 'gcr.io/alien-fold-180922/grpc-content:latest'
-}
 
-task pushDocker(type: Exec) {
-    dependsOn tagDocker
-    commandLine 'gcloud', 'docker', '--', 'push', 'gcr.io/alien-fold-180922/grpc-content:latest'
-}
-
-task deployZrada(type: Exec) {
-    commandLine 'kubectl', 'create', '-f', 'k8s/zrada.yaml'
-}
-
-task deployPeremoga(type: Exec) {
-    commandLine 'kubectl', 'create', '-f', 'k8s/peremoga.yaml'
-}
-
-task deployPokemon(type: Exec) {
-    commandLine 'kubectl', 'create', '-f', 'k8s/pokemon.yaml'
-}
-
-task deployBigdata(type: Exec) {
-    commandLine 'kubectl', 'create', '-f', 'k8s/bigdata.yaml'
-}
-
-task undeployZrada(type: Exec) {
-    commandLine 'kubectl', 'delete', '-f', 'k8s/zrada.yaml'
-}
-
-task undeployPeremoga(type: Exec) {
-    commandLine 'kubectl', 'delete', '-f', 'k8s/peremoga.yaml'
-}
-
-task undeployPokemon(type: Exec) {
-    commandLine 'kubectl', 'delete', '-f', 'k8s/pokemon.yaml'
-}
-
-task undeployBigdata(type: Exec) {
-    commandLine 'kubectl', 'delete', '-f', 'k8s/bigdata.yaml'
-}
-
-task undeploy() {
-    dependsOn undeployZrada, undeployPeremoga
-}
-
-task deploy() {
-    dependsOn deployZrada, deployPeremoga
-}
+apply from: 'https://raw.githubusercontent.com/gRPCVsREST/gradle-common/master/common.gradle'
