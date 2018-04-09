@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: grpc-content-a
-          image: gcr.io/$GCP_PROJECT/grpc-content-server:latest
+          image: gcr.io/$GCP_PROJECT/grpc-content-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
         - name: grpc-content-b
-          image: gcr.io/$GCP_PROJECT/grpc-content-server:latest
+          image: gcr.io/$GCP_PROJECT/grpc-content-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

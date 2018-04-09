@@ -12,7 +12,7 @@ public class ContentClient {
 
     public static void main(String... args) throws InterruptedException {
         int port = args != null && args.length > 0? Integer.parseInt(args[0]) : DEFAULT_PORT;
-        ManagedChannel channel = NettyChannelBuilder.forAddress("localhost", port).usePlaintext(true).build();
+        ManagedChannel channel = NettyChannelBuilder.forAddress("localhost", port).usePlaintext().build();
 
         ContentServiceGrpc.ContentServiceBlockingStub stub = ContentServiceGrpc.newBlockingStub(channel);
 
