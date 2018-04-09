@@ -1,20 +1,13 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.bmuschko:gradle-docker-plugin:3.1.0'
-    }
-
 }
 
 group 'com.grpcvsrest'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'com.bmuschko.docker-remote-api'
 
 sourceCompatibility = 1.8
 
@@ -27,8 +20,8 @@ repositories {
 
 dependencies {
     compile 'org.grpcvsrest:content:0.1-SNAPSHOT'
-    compile 'io.grpc:grpc-all:1.6.1'
-    compile project(':grpc-api')
+    compile 'io.grpc:grpc-all:1.11.0'
+    compile 'com.grpcvsrest:grpc-api:1.0-SNAPSHOT'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

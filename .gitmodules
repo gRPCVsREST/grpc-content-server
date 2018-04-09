@@ -1,3 +1,0 @@
-[submodule "grpc-api"]
-	path = grpc-api
-	url = git@github.com:gRPCVsREST/grpc-api.git
