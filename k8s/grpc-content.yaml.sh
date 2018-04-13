@@ -23,6 +23,10 @@ spec:
               value: "$CONTENT_URL_A"
             - name: counter
               value: "$(date +%s)"
+            - name: ZIPKIN_SERVICE_HOST
+              value: "zipkin"
+            - name: ZIPKIN_SERVICE_PORT
+              value: "9411"
 ---
 apiVersion: v1
 kind: Service
@@ -59,6 +63,10 @@ spec:
               value: "$CONTENT_URL_B"
             - name: counter
               value: "$(date +%s)"
+            - name: ZIPKIN_SERVICE_HOST
+              value: "zipkin"
+            - name: ZIPKIN_SERVICE_PORT
+              value: "9411"
 ---
 apiVersion: v1
 kind: Service
